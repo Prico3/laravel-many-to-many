@@ -7,6 +7,7 @@ use App\Http\Requests\StorePostRequest;
 use App\Http\Requests\UpdatePostRequest;
 use App\Models\Category;
 use App\Models\Post;
+use App\Models\Tag;
 use Illuminate\Support\Facades\Storage;
 
 class PostController extends Controller
@@ -30,7 +31,8 @@ class PostController extends Controller
     public function create()
     {
         $categories = Category::all();
-        return view('admin.posts.create', compact('categories'));
+        $tags = Tag::all();
+        return view('admin.posts.create', compact('categories', 'tags'));
     }
 
     /**
@@ -49,6 +51,11 @@ class PostController extends Controller
             $form_data['cover_image'] = $path;
         }
         $post = Post::create($form_data);
+
+        if ($request->has('tags')) {
+            $post->tags()->attach($request->tags);
+        }
+
         return redirect()->route('admin.posts.index')->with('message', 'Il Progetto è sato creato con successo');
     }
 
@@ -72,7 +79,8 @@ class PostController extends Controller
     public function edit(Post $post)
     {
         $categories = Category::all();
-        return view('admin.posts.edit', compact('post', 'categories'));
+        $tags = Tag::all();
+        return view('admin.posts.edit', compact('post', 'categories', 'tags'));
     }
 
     /**

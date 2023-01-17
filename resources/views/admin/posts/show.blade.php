@@ -14,6 +14,15 @@
 
         <p>{{ $post->content }}</p>
 
+        <div class="tags mt-5">
+            @forelse ($post->tags as $tag)
+                <span>{{ $tag->name }}</span>
+
+            @empty
+                <span>Nessuna Tecnologia</span>
+            @endforelse
+        </div>
+
 
     </div>
 @endsection
